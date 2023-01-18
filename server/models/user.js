@@ -10,7 +10,7 @@ const UserSchema = Schema({
     required: [true, "El correo es obligatorio"],
     unique: true,
   },
-  avatar: {
+  picture: {
     type: String,
   },
   role: {
