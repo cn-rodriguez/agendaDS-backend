@@ -3,6 +3,8 @@ import NextMeeting from "./../../components/nextMeeting/NextMeeting";
 import HistoryMeetings from "./../../components/historyMeetings/HistoryMeetings";
 import ScheduleButtons from "../../components/scheduleButtons/ScheduleButtons";
 import NavBar from "./../../components/navBar/NavBar";
+import { useContext } from "react";
+import StoreContext from "../../StoreContext";
 
 const userId = "admin";
 fetch("https://jsonplaceholder.typicode.com/todos/1").then((response) =>
@@ -11,6 +13,9 @@ fetch("https://jsonplaceholder.typicode.com/todos/1").then((response) =>
 // TODO make responsive
 
 export default function HomePage() {
+  const userLogged = useContext(StoreContext);
+  console.log(userLogged);
+
   return (
     <div className="bg-dark-blue md:grid md:grid-cols-10 h-screen p-2 m-1">
       <div className="col-span-2">

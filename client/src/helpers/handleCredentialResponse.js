@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 export const handleCredentialResponse = (response) => {
   const body = { id_token: response.credential };
 
@@ -10,7 +12,12 @@ export const handleCredentialResponse = (response) => {
   })
     .then((resp) => resp.json())
     .then((resp) => {
-      console.log(resp);
+      const userLogged = {
+        id: resp.user._id,
+        email: resp.user.email,
+      };
+      localStorage.setItem("logged", JSON.stringify(userLogged));
     })
     .catch(console.warn);
+  console.log("logeado");
 };
