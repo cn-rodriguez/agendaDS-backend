@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavBar() {
+  async function LogOut() {
+    console.log(google.accounts.id);
+  }
+
   return (
     // <div className="bg-dark-blue mb-8">
     //   <ul className="flex h-10 items-center justify-center">
@@ -49,7 +53,7 @@ export default function NavBar() {
       </div>
       <div className="text-white  flex justify-center items-center">
         <div className="hover:bg-red-500 m-2 p-2 rounded-lg">
-          <Link className="text-xl">
+          <Link className="text-xl" onClick={LogOut}>
             <FontAwesomeIcon icon={faRightFromBracket} />
             {/* {` Salir`} */}
           </Link>

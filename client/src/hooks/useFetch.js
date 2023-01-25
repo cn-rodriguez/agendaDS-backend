@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useFetch = (url) => {
+export const useFetch = (url, trigger = "") => {
   const [state, setState] = useState({
     data: null,
     isLoading: true,
@@ -24,7 +24,7 @@ export const useFetch = (url) => {
   };
   useEffect(() => {
     getFetch();
-  }, [url]);
+  }, [trigger]);
 
   return {
     data: state.data,

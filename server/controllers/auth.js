@@ -29,7 +29,12 @@ const googleSignIn = async (req, res) => {
     }
 
     // Generar JWT
-    const token = await generateJWT(user.id);
+    const token = await generateJWT({
+      id: user.id,
+      role: user.role,
+      login: true,
+    });
+    console.log(token);
     res.status(200).json({
       user,
       token,
