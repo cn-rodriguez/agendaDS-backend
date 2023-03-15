@@ -11,7 +11,7 @@ export default function SelectSchedulePage() {
       <div className="col-span-2">
         <NavBar />
       </div>
-      <div className="bg-white col-span-8 rounded-3xl m-1 {}">
+      <div className="bg-grey-bg col-span-8 rounded-3xl m-1">
         <div>
           <AttentionSchedule />
         </div>

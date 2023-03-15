@@ -3,9 +3,14 @@ import logo from "../../assets/img/Imagen1.webp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
-export default function NavBar() {
+export default function NavBar({ site1 = "/inicio", site2 = "/agenda" }) {
   async function LogOut() {
     console.log(google.accounts.id);
+    google.accounts.id.disableAutoSelect();
+    google.accounts.id.revoke(localStorage.getItem("session"), (done) => {
+      localStorage.clear();
+      location.reload();
+    });
   }
 
   return (
@@ -29,7 +34,7 @@ export default function NavBar() {
       </div>
       <div className="flex md:flex-col text-center md:row-span-2 md:item">
         <NavLink
-          to="/inicio"
+          to={site1}
           style={{ color: "" }}
           className={({ isActive }) =>
             isActive
@@ -40,7 +45,7 @@ export default function NavBar() {
           Inicio
         </NavLink>
         <NavLink
-          to="/agenda"
+          to={site2}
           // style={{ color: "tex" }}
           className={({ isActive }) =>
             isActive

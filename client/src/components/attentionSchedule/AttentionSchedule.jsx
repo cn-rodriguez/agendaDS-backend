@@ -1,53 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import HomePage from "./../../pages/HomePage/HomePage";
 import AttentionForm from "./../attentionForm/AttentionForm";
+import MeetSelected from "../MeetSelected";
 
-const userLoggedId = "1";
+import LoginContext from "../../context/Login/LoginContext";
 
-const user = {
-  id: "2",
-  name: "John",
-  email: "john@gmail.com",
-  attention: {
-    monday: [
-      {
-        id: 1,
-        title: "Monday",
-        start: "2023-01-02T09:00:00",
-        end: "2023-01-02T12:00:00",
-        extendedProps: {
-          slots: 1,
-          description: "A basic description",
-          repeat: "repeat",
-        },
-      },
-      {
-        id: 2,
-        title: "Monday",
-        start: "2023-01-03T13:00:00",
-        end: "2023-01-03sT14:00:00",
-        extendedProps: {
-          slots: 1,
-          description: "A basic description",
-          repeat: "repeat",
-        },
-      },
-    ],
-  },
-};
-
-// const dateSelected = {
-//   teacherId: user.id,
-//   userLoggedId,
-//   date: info.event._instance.range,
-// };
+import { useFetch } from "../../hooks/useFetch";
 
 export default function AttentionSchedule() {
   const navigate = useNavigate();
+  const { userLogged } = useContext(LoginContext);
 
   // const saveEvent = (info) => {
   //   const event = {
@@ -59,6 +25,11 @@ export default function AttentionSchedule() {
   //   localStorage.setItem("dateSelected", JSON.stringify(event));
   //   // navigate("/agenda");
   // };
+
+  let { id } = useParams();
+  const { data } = useFetch(`http://localhost:3001/api/dates/${id}`, id);
+  const user = useFetch(`http://localhost:3001/api/users/${id}`, id);
+
   const [meet, setMeet] = useState({
     teacherId: "",
     userLoggedId: "",
@@ -69,41 +40,48 @@ export default function AttentionSchedule() {
 
   const saveEvent = (info) => {
     setMeet({
-      teacherId: user.id,
-      userLoggedId,
-      date: info.event._instance.range,
+      teacherId: id,
+      teacherName: user.data.user.name,
+      userLoggedId: userLogged.id,
+      date: {
+        start: new Date(info.event._instance?.range?.start).toUTCString(),
+        end: new Date(info.event._instance?.range?.end).toUTCString(),
+      },
     });
-    console.log(meet);
-    console.log(info);
     setIsReadOnly(false);
   };
+  // <div className="bg-grey-bg col-span-8 rounded-3xl m-1">
 
   return (
-    <div>
-      <FullCalendar
-        plugins={[timeGridPlugin]}
-        initialView="timeGridWeek"
-        weekends={false}
-        locale="es"
-        firstDay={1}
-        height="auto"
-        events={user.attention.monday}
-        buttonText={{
-          today: "Hoy",
-        }}
-        allDaySlot={false}
-        titleFormat={{
-          month: "long",
-          year: "numeric",
-          day: "2-digit",
-          hour12: false,
-        }}
-        slotMinTime="08:00:00"
-        slotMaxTime="18:00:00"
-        eventClick={saveEvent}
-      />
-
-      <AttentionForm saveEvent={{ meet }} disable={isReadOnly} />
+    <div className="bg-grey-bg md:grid md:grid-cols-3 rounded-3xl my-4">
+      <div className="bg-white col-span-2 p-2 rounded-lg shadow-md mx-2">
+        <FullCalendar
+          plugins={[timeGridPlugin]}
+          initialView="timeGridWeek"
+          weekends={false}
+          locale="es"
+          firstDay={1}
+          height="auto"
+          events={data}
+          buttonText={{
+            today: "Hoy",
+          }}
+          allDaySlot={false}
+          titleFormat={{
+            month: "long",
+            year: "numeric",
+            day: "2-digit",
+            hour12: false,
+          }}
+          slotMinTime="08:00:00"
+          slotMaxTime="18:00:00"
+          eventClick={saveEvent}
+        />
+      </div>
+      <div className="col-span-1 mx-2">
+        <MeetSelected saveEvent={{ meet }} />
+        <AttentionForm saveEvent={{ meet }} disable={isReadOnly} />
+      </div>
     </div>
   );
 }

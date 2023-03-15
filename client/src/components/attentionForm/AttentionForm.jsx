@@ -15,7 +15,7 @@ export default function AttentionForm({ saveEvent, disable }) {
   useEffect(() => {
     // console.log(typeof saveEvent.meet.date.start);
     // console.log(JSON.stringify(saveEvent.meet.date.start));
-    setInfo(saveEvent.meet.date.start);
+    setInfo(saveEvent.meet);
   }, [saveEvent.meet]);
 
   const navigate = useNavigate();
@@ -48,10 +48,29 @@ export default function AttentionForm({ saveEvent, disable }) {
     setError,
     formState: { errors },
   } = useForm();
-
   const onSubmit = (values) => {
-    console.log(values, errors);
-    showAlert();
+    // console.log(values, errors);
+    // console.log({ ...info, details: values });
+    const meet = {
+      idStudent: info.userLoggedId,
+      idTeacher: info.teacherId,
+      nameTeacher: info.teacherName,
+      date: info.date,
+      rut: values.rut,
+      nameTutor: `${values.name} ${values.lastName}`,
+      reason: values.reason,
+      status: "pending",
+    };
+    console.log(meet, errors);
+
+    fetch("http://localhost:3001/api/meetings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(meet),
+    }).then(showAlert());
+
     // navigate("/inicio");
   };
 
@@ -59,7 +78,7 @@ export default function AttentionForm({ saveEvent, disable }) {
     // <div>
     //   <p> {saveEvent ? JSON.stringify(saveEvent.meet.date.start) : "No Existe"}</p>
     // </div>
-    <div className="w-full max-w-lg">
+    <div className="w-full max-w-lg bg-white rounded-lg shadow-md mt-5">
       <form
         className="rounded-md text-sm px-8 pt-6 pb-8 mb-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -132,6 +151,7 @@ export default function AttentionForm({ saveEvent, disable }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-auto"
               type="textarea"
               placeholder="Cual es el motivo de su reunion"
+              {...register("reason")}
               rows="4"
               disabled={disable}
             />

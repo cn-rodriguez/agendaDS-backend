@@ -2,13 +2,15 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginContext from "../context/Login/LoginContext";
 
+import jwt_decode from "jwt-decode";
+
 export default function Login() {
   function checkSession() {
     const session = localStorage.getItem("session");
     return session ? true : false;
   }
   // console.log(checkSession());
-  const { setUser } = useContext(LoginContext);
+  const { userLogged, setUser } = useContext(LoginContext);
   const navigate = useNavigate();
   // const [logged, setLogged] = useState({ id: "", email: "" });
 
@@ -23,7 +25,6 @@ export default function Login() {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(google);
         setUser({
           id: response.user._id,
           email: response.user.email,
@@ -39,7 +40,19 @@ export default function Login() {
           })
         );
       })
-      .then(() => navigate("./inicio"))
+      .then(() => {
+        const { token } = JSON.parse(localStorage.getItem("session"));
+        const { uid } = jwt_decode(token);
+        const { role } = uid;
+        if (role === "ADMIN_ROLE") {
+          navigate("./directora");
+        } else if (role === "TEACHER_ROLE") {
+          navigate("./profesor");
+        } else {
+          navigate("./inicio");
+        }
+        // if ()
+      })
       .catch(console.warn);
   }
   useEffect(() => {
