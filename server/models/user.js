@@ -22,6 +22,8 @@ const UserSchema = Schema({
       "TEACHER_ROLE",
       "TEACHER_PIE_ROLE",
       "RECEPTION_ROLE",
+      "TEACHER_STAFF_ROLE",
+      "STAFF_ROLE",
     ],
   },
   status: {
