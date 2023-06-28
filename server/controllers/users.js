@@ -33,15 +33,19 @@ const usersGetTeachersAll = async (req, res) => {
 // ! INICIO
 
 const usersTeacherStats = async (req, res) => {
-  let userId = "63d1334114ee9f7d71db00e0";
-
   let usersMeetingsStats = [];
 
   const users = await User.find({
-    role: { $in: ["TEACHER_PIE_ROLE", "TEACHER_ROLE"] },
+    role: {
+      $in: [
+        "TEACHER_PIE_ROLE",
+        "TEACHER_ROLE",
+        "TEACHER_STAFF_ROLE",
+        "STAFF_ROLE",
+      ],
+    },
     status: true,
   });
-  // console.log("🚀 ~ file: users.js:41 ~ usersTeacherStats ~ users:", users);
 
   const statsMeetings = async (id) => {
     const meetingsUserPending = await Meetings.count({
